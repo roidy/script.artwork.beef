@@ -44,7 +44,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
         if not selectedarttype:
             break
         multi = mediatypes.get_artinfo(mediatype, selectedarttype)['multiselect']
-        artselectwindow = ArtworkSelector('DialogSelect.xml', settings.addon_path, artlist=availableart[selectedarttype],
+        artselectwindow = ArtworkSelector('FileBrowser.xml', settings.addon_path, artlist=availableart[selectedarttype],
             arttype=selectedarttype, medialabel=medialabel, multi=multi)
         selectedart = artselectwindow.prompt()
     return selectedarttype, selectedart
@@ -120,11 +120,11 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         return self.selected
 
     def onInit(self):
-        self.getControl(1).setLabel("Artwork Beef: " + L(CHOOSE_ART_HEADER).format(self.arttype, self.medialabel))
-        self.getControl(3).setVisible(False)
-        self.getControl(5).setVisible(self.multi)
-        self.getControl(5).setLabel('$LOCALIZE[186]')
-        self.guilist = self.getControl(6)
+        self.getControl(411).setLabel("Artwork Beef: " + L(CHOOSE_ART_HEADER).format(self.arttype, self.medialabel))
+        self.getControl(450).setVisible(False)
+        self.getControl(413).setVisible(self.multi)
+        self.getControl(413).setLabel('$LOCALIZE[186]')
+        self.guilist = self.getControl(451)
 
         for image in self.artlist:
             provider = image['provider'].display
@@ -164,6 +164,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
             listitem.setProperty('Addon.Summary', summary)
             listitem.setIconImage(image['preview'])
+            listitem.setThumbnailImage(image['preview'])
             # DEPRECATED: Above is deprecated in Jarvis, but still works through Krypton (at least)
             # listitem.setArt({'icon': image['preview']})
             listitem.setPath(image['url'])
@@ -173,7 +174,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         self.setFocus(self.guilist)
 
     def onClick(self, controlid):
-        if controlid == 6:
+        if controlid == 451:
             item = self.guilist.getSelectedItem()
             if self.multi:
                 if self.selected is None:
@@ -183,11 +184,11 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             else:
                 self.selected = item.getfilename()
                 self.close()
-        elif controlid == 5:
+        elif controlid == 413:
             if self.multi and self.selected is None:
                 self.selected = ([], [])
             self.close()
-        elif controlid == 7:
+        elif controlid == 414:
             self.selected = None
             self.close()
 
